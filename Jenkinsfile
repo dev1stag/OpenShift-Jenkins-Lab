@@ -11,7 +11,9 @@ def imageTag
 @NonCPS
 def getVersionFromPom() {
     def pom = readMavenPom(file: 'pom.xml')
-    return pom.getVersion()
+    def fullVersionString = pom.getVersion()
+    def versionParts = fullVersionString.split(":")
+    return versionParts[-1] // Prend le dernier élément du tableau
 }
 
 // ... other definitions remain unchanged ...
