@@ -11,13 +11,15 @@ def imageTag
 @NonCPS
 def getVersionFromPom() {
     def pom = readMavenPom(file: 'pom.xml')
-    def fullVersionString = pom.getVersion()
-    def versionParts = fullVersionString.split(":")
-    
-    // Convertit le tableau en une chaîne et l'affiche avec echo
-    echo "Version parts: ${versionParts.join(', ')}"
-    
-    return versionParts[-1] // Prend le dernier élément du tableau
+    def version = pom.getVersion()
+    println "Version complète: ${version}" // Pour le débogage
+    echo "Version complète: ${version}" // Pour le débogage
+    // Suppose que version est une chaîne de la forme groupId:artifactId:type:version
+    def versionParts = version.split(":")
+    def justVersion = versionParts[-1]
+    echo "Version extraite: ${justVersion}" // Pour le débogage
+    println "Version extraite: ${justVersion}" // Pour le débogage
+    return justVersion
 }
 
 // ... other definitions remain unchanged ...
@@ -34,14 +36,6 @@ pipeline {
                     // Set up environment variables or initial parameters
                     env.APPLICATION_VERSION = getVersionFromPom()
                     println "Application Version: ${env.APPLICATION_VERSION}"
-        
-                    // Clean up the workspace to ensure the build starts clean
-                    sh "rm -rf target || true"
-        
-                    // Logging in to OpenShift cluster, if required
-                    // sh "oc login --token=${OC_TOKEN} --server=${OC_SERVER}"
-        
-                    // Any other preliminary setup can be added here
                 }
             }
         }
@@ -58,7 +52,7 @@ pipeline {
                         openshift.withProject(devProject) {
                             dir("openshift") {
                                 // Processing and applying the build.yaml OpenShift templat
-                                def result = openshift.process(readFile(file:"build.yaml"), "-p", "APPLICATION_NAME=${appName}", "-p", "IMAGE_TAG=${imageTag}")
+                                def result = openshift.process(readFile(file:"build.yaml"), "-p", "APPLICATION_NAME=${appName}", "-p", "IMAGE_TAG=${env.APPLICATION_VERSION}")
                                 openshift.apply(result)
                             }
                             dir("target") {
