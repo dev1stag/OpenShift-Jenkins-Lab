@@ -10,8 +10,9 @@ def imageTag
 
 @NonCPS
 def getVersionFromPom() {
-    pom = readMavenPom file: 'pom.xml'
-    return pom.version
+    def pom = readFile('pom.xml').replaceAll("\\s+","") // Remove all whitespaces for reliable matching
+    def matcher = pom =~ '<version>(.*?)</version>'
+    return matcher ? matcher[0][1] : null
 }
 
 // ... other definitions remain unchanged ...
@@ -51,13 +52,14 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject(devProject) {
                             dir("openshift") {
-                                // Processing and applying the build.yaml OpenShift template
+                                // Processing and applying the build.yaml OpenShift templat
+                                echo 
                                 def result = openshift.process(readFile(file:"build.yaml"), "-p", "APPLICATION_NAME=${appName}", "-p", "IMAGE_TAG=${imageTag}")
                                 openshift.apply(result)
                             }
                             dir("target") {
                                 // Make sure the path and file name are correct
-                                openshift.selector("bc", appName).startBuild("--from-file=birthday-paradox-${env.APP_VERSION}.jar").logs("-f")
+                                openshift.selector("bc", appName).startBuild("--from-file=birthday-paradox-${env.APPLICATION_VERSION}.jar").logs("-f")
                             }
                         }
                     }
