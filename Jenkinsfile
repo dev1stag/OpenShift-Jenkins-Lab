@@ -53,7 +53,6 @@ pipeline {
                         openshift.withProject(devProject) {
                             dir("openshift") {
                                 // Processing and applying the build.yaml OpenShift templat
-                                echo 
                                 def result = openshift.process(readFile(file:"build.yaml"), "-p", "APPLICATION_NAME=${appName}", "-p", "IMAGE_TAG=${imageTag}")
                                 openshift.apply(result)
                             }
