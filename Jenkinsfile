@@ -13,6 +13,10 @@ def getVersionFromPom() {
     def pom = readMavenPom(file: 'pom.xml')
     def fullVersionString = pom.getVersion()
     def versionParts = fullVersionString.split(":")
+    
+    // Convertit le tableau en une chaîne et l'affiche avec echo
+    echo "Version parts: ${versionParts.join(', ')}"
+    
     return versionParts[-1] // Prend le dernier élément du tableau
 }
 
