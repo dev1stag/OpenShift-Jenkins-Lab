@@ -15,7 +15,20 @@ pipeline {
         stage("Setup") {
             steps {
                 script {
-                    // Setup steps remain unchanged ...
+                    // Check out the code from your source control
+                    checkout scm
+        
+                    // Set up environment variables or initial parameters
+                    env.APPLICATION_VERSION = getVersionFromPom()
+                    println "Application Version: ${env.APPLICATION_VERSION}"
+        
+                    // Clean up the workspace to ensure the build starts clean
+                    sh "rm -rf target || true"
+        
+                    // Logging in to OpenShift cluster, if required
+                    // sh "oc login --token=${OC_TOKEN} --server=${OC_SERVER}"
+        
+                    // Any other preliminary setup can be added here
                 }
             }
         }
