@@ -5,22 +5,6 @@ def testProject = devProject // Since you have only one project
 def prodProject = devProject // Since you have only one project
 
 def skopeoToken
-def imageTag
-
-
-@NonCPS
-def getVersionFromPom() {
-    def pom = readMavenPom(file: 'pom.xml')
-    def version = pom.getVersion()
-    println "Version complète: ${version}" // Pour le débogage
-    echo "Version complète: ${version}" // Pour le débogage
-    // Suppose que version est une chaîne de la forme groupId:artifactId:type:version
-    def versionParts = version.split(":")
-    def justVersion = versionParts[-1]
-    echo "Version extraite: ${justVersion}" // Pour le débogage
-    println "Version extraite: ${justVersion}" // Pour le débogage
-    return justVersion
-}
 
 // ... other definitions remain unchanged ...
 
@@ -67,7 +51,7 @@ pipeline {
         stage("Deploy Application to Dev") {
             steps {
                 script {
-                    deployApplication(appName, imageTag, devProject, replicas)
+                    deployApplication(appName, ${env.APPLICATION_VERSION}, devProject, replicas)
                 }
             }
         }
@@ -76,7 +60,7 @@ pipeline {
             steps {
                 script {
                     // Since it's the same project, this might be redundant, but kept for structure
-                    skopeoCopy(skopeoToken, devProject, testProject, appName, imageTag)
+                    skopeoCopy(skopeoToken, devProject, testProject, appName, ${env.APPLICATION_VERSION})
                 }
             }
         }
@@ -84,7 +68,7 @@ pipeline {
             steps {
                 script {
                     // Again, deploying to the same 'devProject' since there's no separate test project
-                    deployApplication(appName, imageTag, testProject, replicas)
+                    deployApplication(appName, ${env.APPLICATION_VERSION}, testProject, replicas)
                 }
             }
         }
@@ -98,7 +82,7 @@ pipeline {
             steps {
                 script {
                     // Redundant in a single-project setup but included for completeness
-                    skopeoCopy(skopeoToken, devProject, prodProject, appName, imageTag)
+                    skopeoCopy(skopeoToken, devProject, prodProject, appName, ${env.APPLICATION_VERSION})
                 }
             }
         }
@@ -106,7 +90,7 @@ pipeline {
             steps {
                 script {
                     // Deploying to the same 'devProject', effectively re-deploying in the same environment
-                    deployApplication(appName, imageTag, prodProject, replicas)
+                    deployApplication(appName, ${env.APPLICATION_VERSION}, prodProject, replicas)
                 }
             }
         }
