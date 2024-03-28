@@ -10,11 +10,9 @@ def imageTag
 
 @NonCPS
 def getVersionFromPom() {
-    IMAGE = readMavenPom().getArtifactId()
-    VERSION = readMavenPom().getVersion()
-    echo "IMAGE: ${IMAGE}"
-    echo "VERSION: ${VERSION}"
-    return VERSION ? VERSION : null
+    pom = readMavenPom(file: 'pom.xml')
+    def pom_version = pom.version
+    return pom_version
 }
 
 // ... other definitions remain unchanged ...
