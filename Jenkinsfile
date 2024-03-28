@@ -7,11 +7,13 @@ def prodProject = devProject // Since you have only one project
 def skopeoToken
 def imageTag
 
+
 // Define getVersionFromPom at the top level of the Jenkinsfile
 @NonCPS
 def getVersionFromPom() {
-    def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
-    return matcher ? matcher[0][1] : null
+    def pom = readFile('pom.xml')
+    def matcher = pom =~ '<version>(.+)</version>'
+    return matcher ? matcher[0][1] : "0.0.1-SNAPSHOT" // Provide a default version
 }
 
 // ... other definitions remain unchanged ...
@@ -56,8 +58,8 @@ pipeline {
                                 openshift.apply(result)
                             }
                             dir("target") {
-                                // Building the image from the JAR file
-                                openshift.selector("bc", appName).startBuild("--from-file=target/${appName}-${imageTag}.jar").logs("-f")
+                                // Make sure the path and file name are correct
+                                openshift.selector("bc", appName).startBuild("--from-file=birthday-paradox-${env.APP_VERSION}.jar").logs("-f")
                             }
                         }
                     }
