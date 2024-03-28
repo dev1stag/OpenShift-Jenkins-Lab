@@ -36,12 +36,19 @@ pipeline {
         stage("Setup") {
             steps {
                 script {
-                    openshift.withCluster() {
-                        //openshift.withProject(devProject) {
-                        //    skopeoToken = openshift.raw("sa get-token jenkins").out.trim()
-                        //}
-                        imageTag = getVersionFromPom()
-                    }
+                    // Check out the code from your source control
+                    checkout scm
+        
+                    // Set up environment variables or initial parameters
+                    imageTag = getVersionFromPom()
+        
+                    // Clean up the workspace to ensure the build starts clean
+                    sh "rm -rf target || true"
+        
+                    // Logging in to OpenShift cluster, if required
+                    // sh "oc login --token=${OC_TOKEN} --server=${OC_SERVER}"
+        
+                    // Any other preliminary setup can be added here
                 }
             }
         }
