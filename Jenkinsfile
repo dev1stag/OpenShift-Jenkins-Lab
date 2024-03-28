@@ -32,9 +32,9 @@ pipeline {
                 script {
                     // Check out the code from your source control
                     checkout scm
-        
+                    pom = readMavenPom(file: 'pom.xml')
                     // Set up environment variables or initial parameters
-                    env.APPLICATION_VERSION = getVersionFromPom()
+                    env.APPLICATION_VERSION = pom.getVersion()
                     println "Application Version: ${env.APPLICATION_VERSION}"
                 }
             }
