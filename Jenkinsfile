@@ -10,9 +10,8 @@ def imageTag
 
 @NonCPS
 def getVersionFromPom() {
-    pom = readMavenPom(file: 'pom.xml')
-    def pom_version = pom.version
-    return pom_version
+    pom = readMavenPom file: 'pom.xml'
+    return pom.version
 }
 
 // ... other definitions remain unchanged ...
