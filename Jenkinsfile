@@ -10,8 +10,8 @@ def imageTag
 
 @NonCPS
 def getVersionFromPom() {
-    def pom = readFile('pom.xml').replaceAll("\\s+","") // Remove all whitespaces for reliable matching
-    def matcher = pom =~ '<version>(.*?)</version>'
+    def pom = readFile('pom.xml')
+    def matcher = pom =~ /<version>(\S+)<\/version>/
     return matcher ? matcher[0][1] : null
 }
 
