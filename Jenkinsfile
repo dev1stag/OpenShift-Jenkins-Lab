@@ -7,6 +7,13 @@ def prodProject = devProject // Since you have only one project
 def skopeoToken
 def imageTag
 
+// Define getVersionFromPom at the top level of the Jenkinsfile
+@NonCPS
+def getVersionFromPom() {
+    def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
+    return matcher ? matcher[0][1] : null
+}
+
 // ... other definitions remain unchanged ...
 
 pipeline {
