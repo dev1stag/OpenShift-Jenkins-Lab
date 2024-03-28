@@ -51,7 +51,7 @@ pipeline {
         stage("Deploy Application to Dev") {
             steps {
                 script {
-                    deployApplication(appName, ${env.APPLICATION_VERSION}, devProject, replicas)
+                    deployApplication(appName, env.APPLICATION_VERSION, devProject, replicas)
                 }
             }
         }
@@ -60,7 +60,7 @@ pipeline {
             steps {
                 script {
                     // Since it's the same project, this might be redundant, but kept for structure
-                    skopeoCopy(skopeoToken, devProject, testProject, appName, ${env.APPLICATION_VERSION})
+                    skopeoCopy(skopeoToken, devProject, testProject, appName, env.APPLICATION_VERSION)
                 }
             }
         }
@@ -68,7 +68,7 @@ pipeline {
             steps {
                 script {
                     // Again, deploying to the same 'devProject' since there's no separate test project
-                    deployApplication(appName, ${env.APPLICATION_VERSION}, testProject, replicas)
+                    deployApplication(appName, env.APPLICATION_VERSION, testProject, replicas)
                 }
             }
         }
@@ -82,7 +82,7 @@ pipeline {
             steps {
                 script {
                     // Redundant in a single-project setup but included for completeness
-                    skopeoCopy(skopeoToken, devProject, prodProject, appName, ${env.APPLICATION_VERSION})
+                    skopeoCopy(skopeoToken, devProject, prodProject, appName, env.APPLICATION_VERSION)
                 }
             }
         }
@@ -90,7 +90,7 @@ pipeline {
             steps {
                 script {
                     // Deploying to the same 'devProject', effectively re-deploying in the same environment
-                    deployApplication(appName, ${env.APPLICATION_VERSION}, prodProject, replicas)
+                    deployApplication(appName, env.APPLICATION_VERSION, prodProject, replicas)
                 }
             }
         }
