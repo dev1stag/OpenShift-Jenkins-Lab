@@ -1,6 +1,6 @@
 def appName = "birthday-paradox"
 def replicas = "1"
-def devProject = "mfarhaouii-dev"
+def devProject = "stagiaire1dev1-dev"
 
 def skopeoToken
 def imageTag
