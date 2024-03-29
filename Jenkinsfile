@@ -34,7 +34,7 @@ pipeline {
         stage("Setup") {
             steps {
                 script {
-                    // Check out the code from your source control
+                    // Check out the code  aa from your source control
                     checkout scm
         
                     // Set up environment variables or initial parameters
