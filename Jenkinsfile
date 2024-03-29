@@ -55,7 +55,8 @@ pipeline {
         stage("Build & Test") {
             steps {
                 // Example Maven build command
-                sh "mvn clean package"
+                // sh "mvn clean package"
+                sh 'mvn clean install -DargLine="--add-opens java.base/java.lang=ALL-UNNAMED"'
             }
         }
         stage("Create Image") {
